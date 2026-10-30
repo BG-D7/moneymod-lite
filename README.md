@@ -1,21 +1,83 @@
 # Moneymod Lite
-Moneymod lite
-Installing:
-1. Install colorama python module (For example, through pip) (Only for color versions) 
-2. Install mcstatus python module (For example, through pip) (only for mcstatus framework edition)
-2. Install requests python module (For example, through pip) (only for jewtrick framework edition)
-3. Run the file 2B2T_Cheker.py
-4. Done!  
-Or run MoneyModLite.exe
 
-Moneymod lite
-Установка:
-1. Установи модуль colorama для питона (К примеру через pip) (Только для color версий) (pip install colorama)
-2. Установи модуль mcstatus для питона (К примеру через pip) (pip install mcstatus) (только для mcstatus издания)
-2. Установи модуль requests для питона (К примеру через pip) (pip install requests) (только для jewtrick издания)
-3. Запусти MoneymodLite.py или MoneymodLite_color.py
-4. Готово!  
-Или запусти MoneyModLite.exe
+Следит за 2b2t и сообщает, когда прошёл рестарт. Показывает онлайн, пинг и
+очередь с примерным временем ожидания (по данным [2b2t.vc](https://2b2t.vc)).
+Умеет ходить через список прокси.
 
-Разработано BG-D7, вдохновлено манимодом mrnv'а    
-Developed by BG-D7
+```
+$ moneymod-lite
+Moneymod Lite 5.0.0 by BG — слежу за 2b2t.org
+18:16:56 | онлайн 1278, пинг 96 мс | очередь 735 (+2 prio), ~68 ч 14 мин в конце очереди
+18:17:26 | нет ответа
+18:17:56 | сервер не отвечает
+Сервер ушёл на рестарт.
+...
+18:31:26 | онлайн 12, пинг 101 мс | очередь 3 (+0 prio), ~11 мин в конце очереди
+Рестарт прошёл! Сервер снова отвечает.
+```
+
+Рестарт определяется по тому, что сервер перестал отвечать (два раза подряд,
+чтобы не реагировать на случайный сбой сети) и снова начал. Когда рестарт
+прошёл, программа ещё и пищит.
+
+## Установка
+
+Нужен Python 3.10+.
+
+```sh
+pipx install git+https://github.com/BG-D7/moneymod-lite
+# или
+pip install git+https://github.com/BG-D7/moneymod-lite
+```
+
+Без установки, из папки с кодом: `python -m moneymod_lite` (после
+`pip install -e .`).
+
+## Использование
+
+```sh
+moneymod-lite                      # проверять 2b2t каждые 30 секунд
+moneymod-lite -i 10                # каждые 10 секунд (минимум 5)
+moneymod-lite --once               # проверить один раз; код выхода 0, если сервер отвечает
+moneymod-lite --host example.org --no-queue   # другой сервер, без очереди 2b2t
+```
+
+### Прокси
+
+```sh
+moneymod-lite --proxy socks5h://user:pass@1.2.3.4:1080 --proxy http://5.6.7.8:3128
+moneymod-lite --proxy-file proxies.txt
+```
+
+В файле по одному прокси на строку, `#` — комментарий:
+
+```
+# мои прокси
+socks5h://user:pass@1.2.3.4:1080
+socks4://9.9.9.9:1080
+http://5.6.7.8:3128
+1.2.3.4:9050        # без схемы — socks5h
+```
+
+Поддерживаются `socks5h` (DNS на стороне прокси), `socks5`, `socks4a`,
+`socks4` и `http` (через CONNECT). Через прокси идут и пинг сервера, и
+запросы к 2b2t.vc.
+
+- Запросы распределяются по списку по кругу.
+- Если прокси не работает, он отдыхает `--proxy-cooldown` секунд (по умолчанию
+  300) и пробуется только когда остальные тоже не справились.
+- Если не сработал ни один прокси, программа пишет «все прокси недоступны» и
+  **не** считает это рестартом.
+- Пароли от прокси не выводятся в консоль.
+
+## Разработка
+
+```sh
+uv sync
+uv run pytest
+uv run ruff check . && uv run ruff format --check .
+```
+
+---
+
+Разработано BG-D7, вдохновлено манимодом mrnv'а.

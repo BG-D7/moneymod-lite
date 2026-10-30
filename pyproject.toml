@@ -1,0 +1,32 @@
+[project]
+name = "moneymod-lite"
+version = "5.0.0"
+description = "Tells you when 2b2t has finished restarting"
+readme = "README.md"
+authors = [{ name = "BG-D7" }]
+requires-python = ">=3.10"
+dependencies = [
+    "mcstatus>=12.1",
+    "requests[socks]>=2.31",
+    "PySocks>=1.7.1",
+    "colorama>=0.4.6",
+]
+
+[project.scripts]
+moneymod-lite = "moneymod_lite.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/BG-D7/moneymod-lite"
+
+[dependency-groups]
+dev = ["pytest>=8", "ruff>=0.6"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
