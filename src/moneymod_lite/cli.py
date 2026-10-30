@@ -157,6 +157,11 @@ def check_once(
 
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
+    # When redirected, Windows defaults to a legacy code page that can't encode
+    # Cyrillic; consoles handle Unicode themselves.
+    for stream in (sys.stdout, sys.stderr):
+        if not stream.isatty() and hasattr(stream, "reconfigure"):
+            stream.reconfigure(encoding="utf-8")
     colour = not args.no_color and sys.stdout.isatty()
     colorama.just_fix_windows_console()
 

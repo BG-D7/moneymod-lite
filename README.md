@@ -22,7 +22,11 @@ Moneymod Lite 5.0.0 by BG — слежу за 2b2t.org
 
 ## Установка
 
-Нужен Python 3.10+.
+Готовые программы для Windows, Linux (x64 и arm64) и macOS лежат в
+[Releases](https://github.com/BG-D7/moneymod-lite/releases): скачай файл под
+свою систему и запусти, Python не нужен.
+
+Или через Python 3.10+:
 
 ```sh
 pipx install git+https://github.com/BG-D7/moneymod-lite
@@ -76,6 +80,14 @@ http://5.6.7.8:3128
 uv sync
 uv run pytest
 uv run ruff check . && uv run ruff format --check .
+```
+
+Бинарники собираются в GitHub Actions при каждом пуше (смотри артефакты
+workflow «Build binaries»). Чтобы выпустить релиз, подними версию в
+`pyproject.toml` и `src/moneymod_lite/__init__.py` и запушь тег:
+
+```sh
+git tag v5.0.0 && git push origin v5.0.0
 ```
 
 ---
